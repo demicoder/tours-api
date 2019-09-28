@@ -63,4 +63,14 @@ app.get(`/api/v1/tours/:id`, (req, res) => {
   });
 });
 
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id;
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: `ID ${tourId} has been updated`
+    }
+  });
+});
+
 app.listen(3000);
