@@ -73,4 +73,11 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const tourId = req.params.id;
+  res.status(204).json({
+      status: 'success'
+  });
+});
+
 app.listen(3000);
