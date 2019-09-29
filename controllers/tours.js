@@ -1,8 +1,17 @@
 const fs = require('fs');
 
-const path = require('path');
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`));
 
-const tours = JSON.parse(fs.readFileSync( path.join(__dirname,  '../data', 'tours.json')));
+exports.checkId = (req, res, next, id) => {
+  if (+id > tours.length) {
+    return res.status(404).json({
+      status: 'error',
+      message: 'ID not found'
+    });
+  }
+
+  next();
+};
 
 exports.getTours = (req, res) => {
   if (!tours) {
@@ -24,13 +33,6 @@ exports.getTours = (req, res) => {
 exports.getTour = (req, res) => {
   const tourId = +req.params.id;
   const tour = tours.find(t => t.id === tourId);
-
-  if (!tour) {
-    return res.status(404).json({
-      status: 'error',
-      messsage: 'tour not found'
-    });
-  }
 
   res.status(200).json({
     status: 'success',
