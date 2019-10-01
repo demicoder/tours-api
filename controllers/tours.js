@@ -22,16 +22,19 @@ exports.getTours = async (req, res) => {
   }
 };
 
-exports.getTour = (req, res) => {
-  const tourId = +req.params.id;
-  Tour.findById(tourId)
-    .then(doc => {
-      res.status(200).json({
-        status: 'success',
-        tour: doc
-      });
-    })
-    .catch(err => console.log(err));
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    res.status(200).json({
+      status: 'success',
+      tour
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'no tour with that ID'
+    });
+  }
 };
 
 exports.updateTour = (req, res) => {
