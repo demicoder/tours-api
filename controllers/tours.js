@@ -1,26 +1,10 @@
 const fs = require('fs');
 
+const Tour = require('./../models/Tour');
+
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`));
 
-exports.checkId = (req, res, next, id) => {
-  if (+id > tours.length) {
-    return res.status(404).json({
-      status: 'error',
-      message: 'ID not found'
-    });
-  }
-
-  next();
-};
-
 exports.getTours = (req, res) => {
-  if (!tours) {
-    return res.status(404).json({
-      status: 'error',
-      messsage: 'tours not found'
-    });
-  }
-
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -32,12 +16,14 @@ exports.getTours = (req, res) => {
 
 exports.getTour = (req, res) => {
   const tourId = +req.params.id;
-  const tour = tours.find(t => t.id === tourId);
-
-  res.status(200).json({
-    status: 'success',
-    tour
-  });
+  Tour.findById(tourId)
+    .then(doc => {
+      res.status(200).json({
+        status: 'success',
+        tour: doc
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.updateTour = (req, res) => {
@@ -57,21 +43,19 @@ exports.deleteTour = (req, res) => {
   });
 };
 
-exports.createTour = (req, res) => {
-  const newId = +[tours.length] + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
-  const updatedTours = [...tours, newTour];
-
-  fs.writeFile(
-    `${__dirname}/data/tours.json`,
-    JSON.stringify(updatedTours),
-    err => {
-      res.status(201).json({
-        status: 'success',
-        data: {
-          tour: newTour
-        }
-      });
-    }
-  );
+exports.createTour = async (req, res) => {
+  try {
+    const newTour = await Tour.create(req.body);
+    res.status(201).json({
+      status: 'success',
+      data: {
+        tour: newTour
+      }
+    });
+  } catch (err) {
+    res.status(422).json({
+      status: 'error',
+      message: 'Failed to create a tour'
+    });
+  }
 };
