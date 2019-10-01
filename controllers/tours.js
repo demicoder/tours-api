@@ -6,7 +6,12 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`));
 
 exports.getTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    const queryObj = { ...req.query };
+    const excludedFields = ['page', 'fields', 'sort', 'limit'];
+
+    excludedFields.forEach(el => delete queryObj[el]);
+
+    const tours = await Tour.find(queryObj);
     res.status(200).json({
       status: 'success',
       results: tours.length,
