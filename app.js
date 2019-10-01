@@ -10,4 +10,4 @@ const userRoutes = require('./routes/users');
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/tours', tourRoutes);
 
-app.listen(3000);
+module.exports = app;
