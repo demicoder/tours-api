@@ -4,14 +4,22 @@ const Tour = require('./../models/Tour');
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`));
 
-exports.getTours = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours
-    }
-  });
+exports.getTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'No tour found'
+    });
+  }
 };
 
 exports.getTour = (req, res) => {
