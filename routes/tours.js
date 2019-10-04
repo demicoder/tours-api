@@ -4,7 +4,9 @@ const router = express.Router();
 
 const tourController = require('../controllers/tours');
 
-// router.param('id', tourController.checkId);
+router
+  .route('/top-5-cheapest')
+  .get(tourController.aliasTopCheapest, tourController.getTours);
 
 router
   .route('/')

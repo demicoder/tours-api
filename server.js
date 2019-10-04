@@ -7,6 +7,7 @@ const DB = 'natours';
 mongoose
   .connect(`mongodb://localhost:27017/${DB}`, {
     useNewUrlParser: true,
+    useCreateIndex: true,
     useUnifiedTopology: true
   })
   .then(() => {

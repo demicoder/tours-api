@@ -2,7 +2,11 @@ const fs = require('fs');
 
 const Tour = require('./../models/Tour');
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`));
+exports.aliasTopCheapest = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = 'ratingAverage,-price,';
+  next();
+};
 
 exports.getTours = async (req, res) => {
   try {
@@ -22,7 +26,7 @@ exports.getTours = async (req, res) => {
 
     // Sort querires
     if (req.query.sort) {
-      const sortBy = req.query.split(',').join(' ');
+      const sortBy = req.query.sort.split(',').join(' ');
       query.sort(sortBy);
     } else {
       query.sort('-createdAt');
@@ -38,9 +42,10 @@ exports.getTours = async (req, res) => {
 
     // Pagination
     const page = +req.query.page || 1;
-    const limit = +req.query.limit || 1;
+    const limit = +req.query.limit || 100;
     const skip = (page - 1) * limit;
-    query.skip(skip).limit(limit);
+
+    query = query.skip(skip).limit(limit);
 
     if (req.query.page) {
       const numTours = await Tour.countDocuments();
