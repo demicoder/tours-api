@@ -19,21 +19,36 @@ const tourSchema = new Schema(
     },
     maxGroupSize: {
       type: Number,
-      required: [true, 'Tour must have a group size']
+      required: [true, 'Tour must have a group size'],
+      min: [1, 'Tour must have at least one group size']
     },
     difficulty: {
       type: String,
-      required: [true, 'Tour must have a difficulty level']
+      required: [true, 'Tour must have a difficulty level'],
+      enum: {
+        values: ['easy,medium,difficult'],
+        message: 'Difficulty level must be Easy, Medium or Difficulty'
+      }
     },
     ratingAverage: {
       type: Number,
-      default: 0
+      default: 0,
+      min: [1, 'Tour average rating must not be less than 1'],
+      max: [5, 'Tour average rating must not be more than 5']
     },
     ratingQuantity: {
       type: Number,
       default: 0
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        validator: function(val) {
+          return this.price > val;
+        },
+        message: 'Discount must not be more than tour price'
+      }
+    },
     summary: {
       type: String,
       trim: true,
@@ -41,7 +56,8 @@ const tourSchema = new Schema(
     },
     description: {
       type: String,
-      trim: true
+      trim: true,
+      minlength: [20, 'Tour description must be in 20 or more characters']
     },
     imageCover: {
       type: String,
