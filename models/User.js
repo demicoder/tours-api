@@ -8,9 +8,9 @@ const userSchema = new Schema({
     required: [true, 'User must have a name']
   },
   email: {
-    type: mongoose.Types.email,
+    type: String,
     unique: true,
-    required: [true, 'User must have a name'],
+    required: [true, 'User must have an E-mail'],
     lowercase: true
   },
   photo: String,

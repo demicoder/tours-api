@@ -1,9 +1,9 @@
 const fs = require('fs');
 
-const APIfeatures = require('./../utils/apiFeatures');
-const Tour = require('./../models/Tour');
-const AppError = require('./../utils/appError');
-const catchAsync = require('./../utils/catchAsync');
+const APIfeatures = require('../utils/apiFeatures');
+const Tour = require('../models/Tour');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
 exports.aliasTopCheapest = (req, res, next) => {
   req.query.limit = '5';

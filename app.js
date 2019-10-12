@@ -5,8 +5,8 @@ const app = express();
 app.use(express.json());
 
 const AppError = require('./utils/appError');
-const tourRoutes = require('./routes/tours');
-const userRoutes = require('./routes/users');
+const tourRoutes = require('./routes/tour');
+const userRoutes = require('./routes/user');
 const globalErrorHandler = require('./controllers/error');
 
 app.use('/api/v1/users', userRoutes);

@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const tourController = require('../controllers/tours');
+const tourController = require('../controllers/tour');
 
 router
   .route('/top-5-cheapest')
