@@ -11,14 +11,35 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     required: [true, 'User must have an E-mail'],
-    lowercase: true
+    lowercase: true,
+    trim: true
   },
   photo: String,
   password: {
     type: String,
     required: [true, 'User must have a password'],
     minlength: 8
+  },
+  confirmPassword: {
+    type: String,
+    required: [true, 'Confirm your password'],
+    validate: {
+      validator: function(el) {
+        return el === this.password;
+      },
+      message: 'Passwords do not match'
+    }
   }
+});
+
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+
+  // this.password = await bcrypt.hash(this.password, 12);
+
+  this.confirmPassword = undefined;
+
+  next();
 });
 
 module.exports = mongoose.model('User', userSchema);
