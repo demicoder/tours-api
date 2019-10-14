@@ -26,16 +26,32 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-  // Send Error Prod
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message
+    });
+  } else {
+    console.error('ERROR', err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Something went very wrong!'
+    });
+  }
 };
 
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
-  let error = { ...err };
-  if (error.name === 'CastError') error = handleCastErrorDB(error);
-  if (error.code === 11000) error = handleDuplicateError(error);
-  if (error.name === 'ValidatorError') error = handleValidationError(error);
-  sendErrorDev(error, res);
+  if (process.env.ENV === 'development') {
+    sendErrorDev(err, res);
+  } else if (process.env.ENV === 'production') {
+    let error = { ...err };
+
+    if (error.name === 'CastError') error = handleCastErrorDB(error);
+    if (error.code === 11000) error = handleDuplicateError(error);
+    if (error.name === 'ValidatorError') error = handleValidationError(error);
+    sendErrorProd(error, res);
+  }
 };

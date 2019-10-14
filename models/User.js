@@ -17,7 +17,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, 'User must have a password'],
-    minlength: 8
+    minlength: process.env.USER_PASSWORD_LENGTH
   },
   confirmPassword: {
     type: String,

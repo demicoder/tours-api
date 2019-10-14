@@ -1,8 +1,12 @@
+const dotenv = require('dotenv');
+
+dotenv.config({
+  path: './config.env'
+});
+
 mongoose = require('mongoose');
 
 const app = require('./app');
-
-const DB = 'natours';
 
 process.on('uncaughtException', err => {
   console.log(err.name, err.message);
@@ -13,13 +17,13 @@ process.on('uncaughtException', err => {
 });
 
 mongoose
-  .connect(`mongodb://localhost:27017/${DB}`, {
+  .connect(`mongodb://localhost:27017/${process.env.DB}`, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
   })
   .then(() => {
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch(err => {
     console.log(err);
