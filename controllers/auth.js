@@ -1,3 +1,5 @@
+const { promisify } = require('util');
+
 const jwt = require('jsonwebtoken');
 const User = require('./../models/User');
 const catchAsync = require('./../utils/catchAsync');
@@ -19,9 +21,15 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  if (!token) {
-    return next(new AppError('Unauthorized access', 401));
-  }
+  if (!token) return next(new AppError('Unauthorized access', 401));
+
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const freshUser = await User.findById(decoded.id);
+
+  if (!freshUser) return next(new AppError('User no longer exists', 401));
+
+  console.log(freshUser);
 
   next();
 });
@@ -53,8 +61,6 @@ exports.login = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
 
   res.status(200).json({
-    token,
-    email,
-    password
+    token
   });
 });
