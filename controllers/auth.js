@@ -11,29 +11,6 @@ const signToken = id => {
   });
 };
 
-exports.protect = catchAsync(async (req, res, next) => {
-  let token;
-
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bear')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
-  }
-
-  if (!token) return next(new AppError('Unauthorized access', 401));
-
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-
-  const freshUser = await User.findById(decoded.id);
-
-  if (!freshUser) return next(new AppError('User no longer exists', 401));
-
-  console.log(freshUser);
-
-  next();
-});
-
 exports.signUp = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -63,4 +40,43 @@ exports.login = catchAsync(async (req, res, next) => {
   res.status(200).json({
     token
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+
+  // Check for token in headers
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bear')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token)
+    return next(
+      new AppError('Unauthorized access. Provide a valid token', 401)
+    );
+
+  // Verify token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  const freshUser = await User.findById(decoded.id);
+
+  // Check if user still exists
+  if (!freshUser) return next(new AppError('User no longer exists', 401));
+
+  // Check if user has changed password
+
+  if (freshUser.changedPasswordAfter(decoded.iat))
+    return next(
+      new AppError(
+        'You recently changed your password, login with the new password',
+        401
+      )
+    );
+
+  // Grant Access 🔓
+  req.user = freshUser;
+  next();
 });
