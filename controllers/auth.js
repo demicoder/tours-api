@@ -48,7 +48,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // Check for token in headers
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith('Bear')
+    req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
@@ -80,3 +80,12 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = freshUser;
   next();
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError("You don't have permission to do that", 403));
+    }
+    next();
+  };
+};
