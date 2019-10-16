@@ -83,7 +83,7 @@ userSchema.methods.generatePasswordToken = function() {
     .digest('hex');
 
   this.passwordResetTokenExpiry =
-    Date.now() + process.env.PASSWORD_TOKEN_EXPIRY * 60 * 1000;
+    Date.now() + +process.env.PASSWORD_TOKEN_EXPIRY * 60 * 1000;
 
   return resetToken;
 };
