@@ -44,6 +44,7 @@ const userSchema = new Schema({
   passwordResetTokenExpiry: Date
 });
 
+// Don't save confirmPassword field to DB
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
@@ -54,6 +55,15 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// Changed passwordChangedAt property if !new and password is modifed
+userSchema.pre('save', function(next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now();
+  next();
+});
+
+// Compare passwords
 userSchema.methods.correctPassword = async function(
   enteredPassword,
   userPassword
@@ -74,6 +84,7 @@ userSchema.methods.changedPasswordAfter = function(JWTtimestamp) {
   return false;
 };
 
+// Generate password rest Token
 userSchema.methods.generatePasswordToken = function() {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
