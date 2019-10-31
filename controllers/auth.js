@@ -96,6 +96,32 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+// User updates passwords while logged in
+exports.changePassword = catchAsync(async (req, res, next) => {
+  // Get user from collectiom
+  const user = await User.findById(req.user._id).select('+password');
+
+  // Check if password is correct
+  if (!(await user.correctPassword(req.body.password, user.password))) {
+    return next(new AppError('Invalid Password', 400));
+  }
+
+  // Update if password is correct
+  user.password = req.body.newPassword;
+  user.confirmPassword = req.body.confirmNewPassword;
+
+  await user.save();
+
+  // Log user in and send JWT
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token,
+    message: 'Your password has been changed'
+  });
+});
+
 exports.restrictTo = (...roles) => {
   // Check if user in request is in roles provided for route
   return (req, res, next) => {
