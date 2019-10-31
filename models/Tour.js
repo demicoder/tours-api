@@ -30,7 +30,7 @@ const tourSchema = new Schema(
         message: 'Difficulty level must be Easy, Medium or Difficulty'
       }
     },
-    ratingAverage: {
+    ratingsAverage: {
       type: Number,
       default: 0,
       min: [1, 'Tour average rating must not be less than 1'],

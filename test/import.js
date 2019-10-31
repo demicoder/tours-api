@@ -1,18 +1,11 @@
 const fs = require('fs');
 
-mongoose = require('mongoose');
+const connectDb = require('./../utils/db');
 
 const Tour = require('../models/Tour');
 
-const DB = 'natours';
+connectDb();
 
-mongoose
-  .connect(`mongodb://localhost:27017/${DB}`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {})
-  .catch(err => console.log(err));
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 
 const deleteMany = async () => {
@@ -39,3 +32,5 @@ deleteMany()
     });
   })
   .catch(err => console.log(err));
+
+console.log(process.argv);

@@ -114,11 +114,35 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     return next(new AppError('No user found with that E-mail', 404));
   }
 
-  console.log(user);
   // Generate Random token
 
   const resetToken = user.generatePasswordToken();
   await user.save({ validateBeforeSave: false });
 
   // Send token to user's E-mail
+
+  const subject = 'Account Password recovery';
+
+  const resetURL = `${req.protocol}://${req.get(
+    'host'
+  )}/reset-password/${resetToken}`;
+
+  const message = `Someone (hopefully you) requested for a password change. Follow the link to reset your password. 
+  Review your account activity if you were not responsible for this action. \n
+  ${resetURL}
+  `;
+
+  // await sendEmail({ subject, to: user.email, message });
+  console.log(resetToken);
+  res.status(200).json({
+    status: 'success',
+    message: 'Reset token sent to user E-mail'
+  });
 });
+
+exports.resetPassword = (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'route not ready yet'
+  });
+};
