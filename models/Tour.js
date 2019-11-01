@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const User = require('./User');
+
 const Schema = mongoose.Schema;
 
 const tourSchema = new Schema(
@@ -64,12 +66,43 @@ const tourSchema = new Schema(
       required: [true, 'Tour must have a cover image']
     },
     images: [String],
-    startDates: [Date]
+    startDates: [Date],
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point']
+      },
+      coordinates: [Number],
+      description: String,
+      address: String
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String
+      }
+    ],
+    guides: Array
   },
   {
     timestamps: true
   }
 );
+
+tourSchema.pre('save', async function(next) {
+  const guidesPromise = this.guides.map(async id => await User.findById(id));
+
+  this.guides = await Promise.all(guidesPromise);
+
+  next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 module.exports = Tour;
