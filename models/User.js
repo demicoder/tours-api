@@ -40,6 +40,11 @@ const userSchema = new Schema(
       enum: ['user', 'admin', 'guide', 'lead-guide'],
       default: 'user'
     },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpiry: Date
