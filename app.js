@@ -15,6 +15,7 @@ dotenv.config({
 const AppError = require('./utils/appError');
 const tourRoutes = require('./routes/tour');
 const userRoutes = require('./routes/user');
+const reviewRoutes = require('./routes/review');
 const globalErrorHandler = require('./controllers/error');
 
 // Secure HTTP headers
@@ -47,6 +48,7 @@ app.use(express.json({ limit: process.env.BODY_LIMIT_SIZE }));
 // App routes
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/tours', tourRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 
 // Fallback handler
 app.all('*', (req, res, next) => {
