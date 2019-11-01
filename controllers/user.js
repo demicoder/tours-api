@@ -1,5 +1,18 @@
+const User = require('./../models/User');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./error');
+const AppError = require('./../utils/appError');
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) {
+      return (newObj[el] = obj[el]);
+    }
+  });
+
+  return newObj;
+};
 
 exports.getUsers = (req, res) => {
   res.status(500).json({
@@ -40,14 +53,23 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.confirmPassword) {
     return next(
       new AppError(
-        'This route is not for password change. Use /api/v1/forgot-password instead',
+        'This route is not for updating passwords. Use /api/v1/forgot-password instead',
         401
       )
     );
   }
 
+  const filteredBody = filterObj(req.body, 'name', 'email');
+
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
+    runValidators: true,
+    new: true
+  });
+
   res.status(200).json({
     status: 'success',
-    message: 'user details updated'
+    data: {
+      user: updatedUser
+    }
   });
 });

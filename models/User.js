@@ -4,45 +4,50 @@ const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
 const validator = require('validator');
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'User must have a name']
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'User must have a name']
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: [true, 'User must have an E-mail'],
+      lowercase: true,
+      validate: [validator.isEmail, 'Provide an E-mail'],
+      trim: true
+    },
+    photo: String,
+    password: {
+      type: String,
+      required: [true, 'User must have a password'],
+      minlength: process.env.USER_PASSWORD_LENGTH,
+      select: false
+    },
+    confirmPassword: {
+      type: String,
+      required: [true, 'Confirm your password'],
+      validate: {
+        validator: function(el) {
+          return el === this.password;
+        },
+        message: 'Passwords do not match'
+      }
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin', 'guide', 'lead-guide'],
+      default: 'user'
+    },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpiry: Date
   },
-  email: {
-    type: String,
-    unique: true,
-    required: [true, 'User must have an E-mail'],
-    lowercase: true,
-    validate: [validator.isEmail, 'Provide an E-mail'],
-    trim: true
-  },
-  photo: String,
-  password: {
-    type: String,
-    required: [true, 'User must have a password'],
-    minlength: process.env.USER_PASSWORD_LENGTH,
-    select: false
-  },
-  confirmPassword: {
-    type: String,
-    required: [true, 'Confirm your password'],
-    validate: {
-      validator: function(el) {
-        return el === this.password;
-      },
-      message: 'Passwords do not match'
-    }
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin', 'guide', 'lead-guide'],
-    default: 'user'
-  },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetTokenExpiry: Date
-});
+  {
+    timestamps: true
+  }
+);
 
 // Don't save confirmPassword field to DB
 userSchema.pre('save', async function(next) {
