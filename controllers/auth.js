@@ -16,6 +16,19 @@ const signToken = id => {
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+  }
+
+  res.cookie('jwt', token, cookieOptions);
+
   res.status(statusCode).json({
     status: 'success',
     token,
@@ -29,8 +42,6 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
   const newUser = await User.create({ name, email, password, confirmPassword });
-
-  newUser.password = undefined;
 
   createSendToken(newUser, 200, res);
 });
@@ -50,8 +61,6 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Invalid E-mail or Password', 401));
   }
-
-  user.password = undefined;
 
   // Create and send Token
 
@@ -189,7 +198,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 3. Update passwordChangeAt property
-  user.password = undefined;
+  //  Done on the user model middleware
   // 4. Send JWT
 
   createSendToken(user, 200, res);
