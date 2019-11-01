@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const app = express();
 
@@ -21,6 +22,19 @@ app.use(helmet());
 
 // Sanitize user input
 app.use(xss());
+
+// Prevent Parameter Pollution
+app.use(
+  hpp({
+    whitelist: [
+      'price',
+      'duration',
+      'ratingQuantity',
+      'startDates',
+      'maxGroupSize'
+    ]
+  })
+);
 
 // Development Logging
 if (process.env.NODE_ENV === 'development') {
