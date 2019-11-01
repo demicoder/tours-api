@@ -13,20 +13,26 @@ const signToken = id => {
   });
 };
 
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user
+    }
+  });
+};
+
 exports.signUp = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
   const newUser = await User.create({ name, email, password, confirmPassword });
 
-  const token = signToken(newUser._id);
-
   newUser.password = undefined;
 
-  res.status(201).json({
-    status: 'success',
-    token,
-    user: newUser
-  });
+  createSendToken(newUser, 200, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -45,15 +51,11 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid E-mail or Password', 401));
   }
 
-  // Sign Token
-  const token = signToken(user._id);
-
   user.password = undefined;
 
-  res.status(200).json({
-    token,
-    user
-  });
+  // Create and send Token
+
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -113,13 +115,8 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // Log user in and send JWT
-  const token = signToken(user._id);
 
-  res.status(200).json({
-    status: 'success',
-    token,
-    message: 'Your password has been changed'
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.restrictTo = (...roles) => {
@@ -192,12 +189,8 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 3. Update passwordChangeAt property
-
+  user.password = undefined;
   // 4. Send JWT
-  const token = signToken(user._id);
 
-  res.status(200).json({
-    status: 'success',
-    token
-  });
+  createSendToken(user, 200, res);
 });
