@@ -2,11 +2,17 @@ const express = require('express');
 
 const dotenv = require('dotenv');
 
+const morgan = require('morgan');
+
 const app = express();
 
 dotenv.config({
   path: './config.env'
 });
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json());
 
