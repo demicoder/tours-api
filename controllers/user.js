@@ -14,12 +14,14 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getUsers = (req, res) => {
-  res.status(500).json({
+exports.getUsers = catchAsync(async (req, res) => {
+  const users = await User.find();
+
+  res.status(200).json({
     status: 'error',
-    message: 'route not ready'
+    users
   });
-};
+});
 
 exports.deleteUser = (req, res) => {
   res.status(500).json({

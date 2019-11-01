@@ -81,6 +81,13 @@ userSchema.methods.correctPassword = async function(
   return await bcrypt.compare(enteredPassword, userPassword);
 };
 
+// Find only active docs
+userSchema.pre(/^find/, function(next) {
+  this.find({ active: { $ne: false } });
+
+  next();
+});
+
 userSchema.methods.changedPasswordAfter = function(JWTtimestamp) {
   if (this.passwordChangedAt) {
     // Convert from passwordChangedAt from date to timestamp
