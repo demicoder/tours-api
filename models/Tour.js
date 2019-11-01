@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const User = require('./User');
-
 const Schema = mongoose.Schema;
 
 const tourSchema = new Schema(
@@ -89,17 +87,24 @@ const tourSchema = new Schema(
         description: String
       }
     ],
-    guides: Array
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     timestamps: true
   }
 );
 
-tourSchema.pre('save', async function(next) {
-  const guidesPromise = this.guides.map(async id => await User.findById(id));
-
-  this.guides = await Promise.all(guidesPromise);
+// Don't select certain fields
+tourSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt -updatedAt -createdAt'
+  });
 
   next();
 });
