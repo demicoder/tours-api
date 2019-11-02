@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const APIfeatures = require('../utils/apiFeatures');
 const Tour = require('../models/Tour');
 const AppError = require('../utils/appError');

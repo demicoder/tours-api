@@ -8,7 +8,11 @@ const router = express.Router();
 
 router
   .route('/:tour')
-  .get(authController.protect, reviewController.getAllReviews)
-  .post(authController.protect, reviewController.addReview);
+  .get(reviewController.getAllReviews)
+  .post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.addReview
+  );
 
 module.exports = router;

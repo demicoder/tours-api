@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
-
-const reviewSchema = new Schema(
+const reviewSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.ObjectId,
@@ -33,5 +31,17 @@ const reviewSchema = new Schema(
     toObject: { virtuals: true }
   }
 );
+
+reviewSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'name photo'
+  }).populate({
+    path: 'tour',
+    select: 'name photo'
+  });
+
+  next();
+});
 
 module.exports = mongoose.model('Review', reviewSchema);
