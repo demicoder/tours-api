@@ -16,15 +16,14 @@ exports.addReview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getReview = (req, res, next) => {
-  res.status(500).json({
-    status: 'fail',
-    message: 'Route not ready yet'
-  });
-};
-
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  let filter = {};
+
+  if (req.params.tour) {
+    filter = { tour: req.params.tour };
+  }
+
+  const reviews = await Review.find(filter);
 
   res.status(200).json({
     status: 'success',
