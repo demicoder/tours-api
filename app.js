@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -17,6 +18,15 @@ const tourRoute = require('./routes/tour');
 const userRoute = require('./routes/user');
 const reviewRoute = require('./routes/review');
 const globalErrorHandler = require('./controllers/error');
+
+// Number of limits per interval
+const limit = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: process.env.REQUESTS_PER_HOUR,
+  message: 'Too many requests from this IP address, try again later.'
+});
+
+app.use('/api', limit);
 
 // Secure HTTP headers
 app.use(helmet());
