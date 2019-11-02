@@ -1,6 +1,7 @@
 const User = require('./../models/User');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const factory = require('./factoryHandler');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -21,12 +22,7 @@ exports.getUsers = catchAsync(async (req, res) => {
   });
 });
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not ready'
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
@@ -35,19 +31,18 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not ready'
-  });
-};
+exports.getUser = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not ready'
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user
+    }
   });
-};
+});
+
+exports.updateUser = factory.updateOne(User);
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.confirmPassword) {

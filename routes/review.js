@@ -13,12 +13,11 @@ router
     authController.restrictTo('user'),
     reviewController.addReview
   )
-  .get(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.getAllReviews
-  );
+  .get(authController.protect, reviewController.getAllReviews);
 
-router.route('/:id').delete(reviewController.deleteReview);
+router
+  .route('/:id')
+  .patch(reviewController.updateReview)
+  .delete(reviewController.deleteReview);
 
 module.exports = router;
