@@ -19,9 +19,7 @@ exports.addReview = catchAsync(async (req, res, next) => {
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
 
-  if (req.params.tour) {
-    filter = { tour: req.params.tour };
-  }
+  if (req.params.tour) filter = { tour: req.params.tour };
 
   const reviews = await Review.find(filter);
 
