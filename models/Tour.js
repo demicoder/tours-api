@@ -103,10 +103,17 @@ const tourSchema = new mongoose.Schema(
 tourSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'guides',
-    select: '-__v -passwordChangedAt -updatedAt -createdAt'
+    select: 'name photo'
   });
 
   next();
+});
+
+// Virtual Populate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'tour'
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
