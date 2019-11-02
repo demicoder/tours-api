@@ -7,7 +7,7 @@ exports.createOne = Model =>
     res.status(201).json({
       status: 'success',
       data: {
-        doc
+        data: doc
       }
     });
   });
@@ -26,7 +26,7 @@ exports.updateOne = Model =>
     res.status(200).json({
       status: 'success',
       data: {
-        doc
+        data: doc
       }
     });
   });
@@ -42,5 +42,25 @@ exports.deleteOne = Model =>
     res.status(204).json({
       status: 'success',
       data: null
+    });
+  });
+
+exports.getOne = (Model, populateOptions) =>
+  catchAsync(async (req, res, next) => {
+    const query = Model.findById(req.params.id);
+
+    if (populateOptions) query.populate(populateOptions);
+
+    const doc = await query;
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: doc
+      }
     });
   });
