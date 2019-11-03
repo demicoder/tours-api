@@ -1,6 +1,5 @@
 const APIfeatures = require('../utils/apiFeatures');
 const Tour = require('../models/Tour');
-const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./factoryHandler');
 

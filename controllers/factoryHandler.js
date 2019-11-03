@@ -64,3 +64,19 @@ exports.getOne = (Model, populateOptions) =>
       }
     });
   });
+
+exports.getAll = Model =>
+  catchAsync(async (req, res) => {
+    let filter = {};
+
+    if (req.params.tour) filter = { tour: req.params.tour };
+
+    const doc = await Model.find(filter);
+
+    res.status(200).json({
+      status: 'error',
+      data: {
+        data: doc
+      }
+    });
+  });
