@@ -1,3 +1,5 @@
+const path = require('path');
+
 const express = require('express');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
@@ -18,6 +20,10 @@ const tourRoute = require('./routes/tour');
 const userRoute = require('./routes/user');
 const reviewRoute = require('./routes/review');
 const globalErrorHandler = require('./controllers/error');
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Number of limits per interval
 const limit = rateLimit({

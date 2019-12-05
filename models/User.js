@@ -100,7 +100,7 @@ userSchema.methods.changedPasswordAfter = function(JWTtimestamp) {
   return false;
 };
 
-// Generate password rest Token
+// Generate password reset Token
 userSchema.methods.generatePasswordToken = function() {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
