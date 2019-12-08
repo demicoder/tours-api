@@ -16,6 +16,7 @@ dotenv.config({
 });
 
 const AppError = require('./utils/appError');
+const viewRoutes = require('./routes/views');
 const tourRoute = require('./routes/tour');
 const userRoute = require('./routes/user');
 const reviewRoute = require('./routes/review');
@@ -62,6 +63,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json({ limit: process.env.BODY_LIMIT_SIZE }));
 
 // App routes
+app.use('/', viewRoutes);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/reviews', reviewRoute);

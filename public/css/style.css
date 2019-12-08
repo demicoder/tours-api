@@ -846,6 +846,15 @@ body {
     color: #999;
 }
 
+.footer__copyright a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.footer__copyright a:hover {
+    color: var(--primary-color);
+}
+
 @media only screen and (max-width: 50em) {
     .footer__copyright {
         justify-self: center;
