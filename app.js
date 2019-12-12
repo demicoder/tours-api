@@ -16,7 +16,7 @@ dotenv.config({
 });
 
 const AppError = require('./utils/appError');
-const viewRoutes = require('./routes/views');
+const viewRoutes = require('./routes/view');
 const tourRoute = require('./routes/tour');
 const userRoute = require('./routes/user');
 const reviewRoute = require('./routes/review');
