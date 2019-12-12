@@ -1148,7 +1148,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to right bottom, #317bdb, #340dc2);
+    background: linear-gradient(to right bottom, #317bdb, #4b1feb);
     opacity: 0.5;
 }
 

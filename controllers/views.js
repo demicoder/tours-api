@@ -1,4 +1,7 @@
 const Tour = require('./../models/Tour');
+
+const factory = require('./../controllers/factoryHandler');
+
 const catchAsync = require('./../utils/catchAsync');
 
 exports.getOverview = catchAsync(async (req, res, next) => {
@@ -10,6 +13,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getTour = (req, res, next) => {
-  res.status(200).render('tour');
-};
+exports.getTour = catchAsync(async (req, res, next) => {
+  const tour = await Tour.findById(req.params.id);
+  // res.status(200).render('tour', { tour });
+});
