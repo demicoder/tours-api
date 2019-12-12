@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+// const slugify = require('slugify');
+
 const tourSchema = new mongoose.Schema(
   {
     name: {
@@ -61,6 +63,7 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Tour must have a cover image']
     },
+    slug: String,
     images: [String],
     startDates: [Date],
     startLocation: {
@@ -108,6 +111,11 @@ tourSchema.pre(/^find/, function(next) {
 
   next();
 });
+
+// tourSchema.pre('save', function(next) {
+//   this.slug = slugify(this.name, { lower: true });
+//   next();
+// });
 
 // Virtual Populate
 tourSchema.virtual('reviews', {
