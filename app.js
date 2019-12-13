@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 
 const app = express();
 
@@ -32,6 +33,9 @@ const limit = rateLimit({
   max: process.env.REQUESTS_PER_HOUR,
   message: 'Too many requests from this IP address, try again later.'
 });
+
+// CORS
+app.use(cors());
 
 app.use('/api', limit);
 

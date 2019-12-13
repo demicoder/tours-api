@@ -12,6 +12,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 });
 
 exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.find({ slug: req.params.slug });
+
   res.status(200).render('tour', { tour });
 });
