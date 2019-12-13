@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// const slugify = require('slugify');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -112,10 +112,10 @@ tourSchema.pre(/^find/, function(next) {
   next();
 });
 
-// tourSchema.pre('save', function(next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+tourSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
 // Virtual Populate
 tourSchema.virtual('reviews', {
