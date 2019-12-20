@@ -1,15 +1,16 @@
 <%- include('inc/header.ejs') %>
-
 <section class="section-header">
+    <div class="header__hero">
+        <div class="header__hero-overlay">&nbsp;</div>
+        <img class="header__hero-img" src="/img/tours/<%= tour.imageCover %>" alt="<%= tour.name %>">
+    </div>
     <div class="heading-box">
-        <div class="header__hero">
-            <div class="header__hero-overlay">&nbsp;</div>
-            <img class="header__hero-img" src="/img/tours/<%= tour.imageCover %>" alt="">
-        </div>
         <h1 class="heading-primary">
             <span><%= tour.name %></span>
         </h1>
         <div class="heading-box__group">
+
+
             <div class="heading-box__detail">
                 <svg class="heading-box__icon">
                     <use xlink:href="/img/icons.svg#icon-clock"></use>
@@ -17,11 +18,10 @@
                 <span class="heading-box__text">
                     <%= tour.duration%>
                     day<%if (tour.duration > 1) {%>s <% } %>
-
                 </span>
             </div>
-            <div class="heading-box__detail">
-                <svg class="heading-box__icon">
+
+            <div class="heading-box__detail"><svg class="heading-box__icon">
                     <use xlink:href="/img/icons.svg#icon-map-pin"></use>
                 </svg>
                 <span class="heading-box__text"><%= tour.startLocation.description %></span>
@@ -29,7 +29,6 @@
         </div>
     </div>
 </section>
-
 <section class="section-description">
     <div class="overview-box">
         <div>
@@ -40,7 +39,8 @@
                         <use xlink:href="img/icons.svg#icon-calendar"></use>
                     </svg>
                     <span class="overview-box__label">Next date</span>
-                    <span class="overview-box__text">August 2021</span>
+                    <span
+                        class="overview-box__text"><%= tour.startDates[0].toLocaleString('en-us',{month: 'long', year: 'numeric'}) %></span>
                 </div>
                 <div class="overview-box__detail">
                     <svg class="overview-box__icon">

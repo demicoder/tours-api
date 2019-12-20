@@ -6,7 +6,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   const tours = await Tour.find();
 
   res.status(200).render('overview', {
-    pageTitle: 'All Tours',
+    title: 'All Tours',
     tours
   });
 });
@@ -17,5 +17,5 @@ exports.getTour = catchAsync(async (req, res, next) => {
     fields: 'review rating user'
   });
 
-  res.status(200).render('tour', { pageTitle: tour.name, tour });
+  res.status(200).render('tour', { title: tour.name, tour });
 });
