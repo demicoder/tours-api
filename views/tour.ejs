@@ -36,7 +36,7 @@
                 <h2 class="heading-secondary ma-bt-lg">Quick facts</h2>
                 <div class="overview-box__detail">
                     <svg class="overview-box__icon">
-                        <use xlink:href="img/icons.svg#icon-calendar"></use>
+                        <use xlink:href="/img/icons.svg#icon-calendar"></use>
                     </svg>
                     <span class="overview-box__label">Next date</span>
                     <span
@@ -44,21 +44,21 @@
                 </div>
                 <div class="overview-box__detail">
                     <svg class="overview-box__icon">
-                        <use xlink:href="img/icons.svg#icon-trending-up"></use>
+                        <use xlink:href="/img/icons.svg#icon-trending-up"></use>
                     </svg>
                     <span class="overview-box__label">Difficulty</span>
                     <span class="overview-box__text"><%= tour.difficulty %></span>
                 </div>
                 <div class="overview-box__detail">
                     <svg class="overview-box__icon">
-                        <use xlink:href="img/icons.svg#icon-user"></use>
+                        <use xlink:href="/img/icons.svg#icon-user"></use>
                     </svg>
                     <span class="overview-box__label">Participants</span>
                     <span class="overview-box__text"><%= tour.maxGroupSize %> people</span>
                 </div>
                 <div class="overview-box__detail">
                     <svg class="overview-box__icon">
-                        <use xlink:href="img/icons.svg#icon-star"></use>
+                        <use xlink:href="/img/icons.svg#icon-star"></use>
                     </svg>
                     <span class="overview-box__label">Rating</span>
                     <span class="overview-box__text"><%= tour.ratingsAverage %> / 5</span>
@@ -74,8 +74,6 @@
                     <!-- <span class="overview-box__label">Lead guide</span> -->
                     <span class="overview-box__text"><%= guide.name %></span>
                 </div>
-
-
                 <% }) %>
 
             </div>
@@ -110,37 +108,30 @@
 <section class="section-reviews">
     <div class="reviews">
 
-
-
-
+        <% if (tour.reviews.length > 0) { %>
+        <% tour.reviews.forEach(review => { %>
 
         <div class="reviews__card">
             <div class="reviews__avatar">
-                <img src="/img/users/user-3.jpg" alt="Ayla Cornell" class="reviews__avatar-img" />
-                <h6 class="reviews__user">Ayla Cornell</h6>
+                <img src="/img/users/<%= review.user.photo %>" alt="Ayla Cornell" class="reviews__avatar-img" />
+                <h6 class="reviews__user"><%= review.user.name %></h6>
             </div>
             <p class="reviews__text">
-                Perferendis quo aliquid iste quas laboriosam molestias illo est
-                voluptatem odit ea. Vero placeat culpa provident dicta maiores!
+                <%= review.review %>
             </p>
             <div class="reviews__rating">
+                <% for(let i = 0;i < review.rating;i++) { %>
                 <svg class="reviews__star reviews__star--active">
-                    <use xlink:href="img/icons.svg#icon-star"></use>
+                    <use xlink:href="/img/icons.svg#icon-star"></use>
                 </svg>
-                <svg class="reviews__star reviews__star--active">
-                    <use xlink:href="img/icons.svg#icon-star"></use>
-                </svg>
-                <svg class="reviews__star reviews__star--active">
-                    <use xlink:href="img/icons.svg#icon-star"></use>
-                </svg>
-                <svg class="reviews__star reviews__star--active">
-                    <use xlink:href="img/icons.svg#icon-star"></use>
-                </svg>
-                <svg class="reviews__star reviews__star--active">
-                    <use xlink:href="img/icons.svg#icon-star"></use>
-                </svg>
+                <% } %>
             </div>
         </div>
+        <% }) %>
+        <% } %>
+
+
+
     </div>
 </section>
 
