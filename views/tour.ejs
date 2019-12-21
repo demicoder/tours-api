@@ -82,10 +82,14 @@
 
     <div class="description-box">
         <h2 class="heading-secondary ma-bt-lg">About <%= tour.name %></h2>
+        <% 
+        const tourDescription = tour.description.split('/n');
+        tourDescription.forEach(p => {
+        %>
         <p class="description__text">
-            <%= tour.description %>
+            <%= p %>
         </p>
-
+        <% }) %>
     </div>
 </section>
 
@@ -101,8 +105,7 @@
 </section>
 
 <section class="section-map">
-    <div id="map"></div>
-
+    <div id="map" data-locations="<%= JSON.stringify(tour.locations) %>"></div>
 </section>
 
 <section class="section-reviews">
