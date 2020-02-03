@@ -28,9 +28,14 @@ const deleteData = async () => {
 };
 
 const importData = async () => {
-  const tours = read('tours');
   try {
+    const tours = read('tours');
+    const reviews = read('reviews');
+    const users = read('users');
+
     await Tour.create(tours);
+    await Review.create(reviews);
+    await User.create(users, { validateBeforeSave: false });
     console.log('Test data nicely imported');
   } catch (err) {
     console.log(err);
