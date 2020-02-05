@@ -1,10 +1,9 @@
 /* eslint-disable */
+import axios from 'axios';
 
-const form = document.querySelector('#form');
-const url = `http://localhost:3000/api/v1/users/login`;
-
-const login = async (email, password) => {
+export const login = async (email, password) => {
   const data = { email, password };
+  const url = `http://localhost:3000/api/v1/users/login`;
 
   try {
     const res = await axios({
@@ -24,9 +23,3 @@ const login = async (email, password) => {
     alert(err.response.data.message);
   }
 };
-
-const { email, password } = form;
-form.addEventListener('submit', e => {
-  e.preventDefault();
-  login(email.value, password.value);
-});
