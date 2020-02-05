@@ -14,12 +14,19 @@
     <img src="/img/logo-white.png" alt="Vakate logo" />
   </div>
   <nav class="nav nav--user">
-    <!-- <a href="#" class="nav__el">My bookings</a>
-        <a href="#" class="nav__el">
-            <img src="img/user.jpg" alt="User photo" class="nav__user-img" />
-            <span>Maverick</span>
-        </a> -->
+    <% if (user) {%>
+    <a href="#" class="nav__el">Logout</a>
+    <a href="#" class="nav__el">
+      <img
+        src="/img/users/<%= user.photo %>"
+        alt="Photo of <%= user.photo %>"
+        class="nav__user-img"
+      />
+      <span><%= user.name.split(' ')[0] %></span>
+    </a>
+    <% } else {%>
     <a href="/login" class="nav__el">Log in</a>
     <!-- <button class="nav__el nav__el--cta">Sign up</button> -->
+    <% }%>
   </nav>
 </header>

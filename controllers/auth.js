@@ -74,7 +74,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
 
-  // Check for token in headers
+  // Check for token in headers and jwt cookie
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -110,6 +110,35 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Grant Access 🔓
   req.user = freshUser;
+  next();
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  // Check for token in cookies
+  if (req.cookies.jwt) {
+    const decoded = await promisify(jwt.verify)(
+      req.cookies.jwt,
+      process.env.JWT_SECRET
+    );
+
+    // Find user from decoded token
+    const currentUser = await User.findById(decoded.id);
+
+    // Check if user still exists
+    if (!currentUser) {
+      return next();
+    }
+
+    // Check if user has changed password
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next();
+    }
+
+    // Grant Access 🔓
+    res.locals.user = currentUser;
+    return next();
+  }
+  res.locals.user = null;
   next();
 });
 
