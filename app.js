@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -57,6 +58,8 @@ app.use(
     ]
   })
 );
+
+app.use(cookieParser());
 
 // Development Logging
 if (process.env.NODE_ENV === 'development') {
