@@ -3,14 +3,17 @@ import axios from 'axios';
 
 import { showAlert } from './alerts';
 
+const PORT = 3000;
+
+const BASE_URL = `http://localhost:${PORT}/api/v1/users`;
+
 export const login = async (email, password) => {
   const data = { email, password };
-  const url = `http://localhost:3000/api/v1/users/login`;
 
   try {
     const res = await axios({
       method: 'POST',
-      url,
+      url: `${BASE_URL}/login`,
       data
     });
 
@@ -22,5 +25,18 @@ export const login = async (email, password) => {
     }
   } catch (err) {
     showAlert('error', err.response.data.message);
+  }
+};
+
+export const logout = async () => {
+  try {
+    const res = await axios({
+      method: 'GET',
+      url: `${BASE_URL}/logout`
+    });
+
+    if (res.data.status === 'success') location.reload(true);
+  } catch (err) {
+    showAlert('error', 'An error occured while logging out.');
   }
 };
